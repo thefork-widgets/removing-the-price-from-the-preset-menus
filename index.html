@@ -1,0 +1,55 @@
+<script type="text/javascript">
+
+  removeMenuPrice(document.getElementsByClassName('saleType-header'));
+  removeMenuPrice(document.getElementsByClassName('contentRecap-saleTypeTitle'));
+  removeMenuPrice(document.getElementsByClassName('contentRecap--thankYou-saleTypeTitle'));
+
+
+  if (document.getElementById('ng-app') != null) {
+    function debounce(func, wait, immediate) {
+      var timeout;
+      return function() {
+        var context = this, args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      };
+    };
+    
+    document.getElementById('ng-app').addEventListener('DOMSubtreeModified', debounce((event) => {
+      
+      if(!!document.getElementById("dhp-sale-type")){
+        removeMenuPrice(document.getElementsByClassName('content-saleType'));
+      }
+      if(!!document.getElementById("cross-sell")){
+        removeMenuPrice(document.getElementsByClassName('saleType-header'));
+      }
+
+    })
+    , 100)
+  }
+
+  function removeMenuPrice(elemnt) {
+     
+    var imputStr = elemnt;
+    var upperStr = '';
+    var strComplete = '';
+
+    for (var i = 0; i < imputStr.length; i++) {
+      strComplete= imputStr[i].textContent.trim().replace(/&nbsp;/g,'');
+      var str1= strComplete.slice(0, (strComplete.length)/2);
+      var str2= strComplete.slice((strComplete.length)/2, strComplete.length);
+      
+      // Add the currency of the country here - Ex: replace('kr', '')
+      str2= str2.replace(/[0-9]+/g,'').replace('SEK', '').replace('kr', '').replace('€', '').replace('*', '').trim();
+      upperStr =  str1.concat(str2);
+      imputStr[i].innerHTML = upperStr;
+    }
+  }
+
+</script>
